@@ -1,3 +1,11 @@
+import numpy as np
+
+
+eps_0 = 8.85*(10**(-12)) #permittivité électrique du vide
+c = 3*(10**8) #vitesse de la lumière
+mu_0 = 4*np.pi*(10**(-7)) #perméabilité magnétique du vide
+w = 2*np.pi*2.45*(10**9) #pulsation des ondes
+
 class Wall:
     "Classe mur contenant les coordonnées (x1,y1) et (x2,y2)"
     def __init__(self,x1,x2,y1,y2,mat):
@@ -19,6 +27,74 @@ class Wall:
 
     def getmat(self):
         return self.mat
+
+        #Permet d'obtenir le module du coeff. de réflexion sur un mur d'épaisseur d en fonction de l'angle d'incidence, qui doit être en RADIANS
+
+    def get_coeff_reflex (self, theta_i, d):
+
+        #Calcul des permittivités
+        eps = self.eps_r*eps_0
+        eps_comp = eps - 1j*(self.sig/w)
+
+        #Calcul des impédances caractéristiques
+        Z0 = np.sqrt(mu_0/eps_0)
+        Zm = np.sqrt(mu_0/eps_comp)
+
+
+       #Calcul de l'angle de transmission
+
+        theta_t = np.arcsin(np.sqrt(1/self.eps_r)*np.sin(theta_i))
+
+
+
+        #Calcul de la distance parcourue dans le mur
+
+        s = d/np.cos(theta_t)
+
+
+
+
+        #Calcul du terme de propagation dans l'air
+
+        beta=w/c
+
+
+        #Calcul du terme de propagation dans le mur
+
+        gamma_m = 1j*w*np.sqrt(mu_0*eps_comp)
+
+        #Calcul du coeff de réflexion pour un angle theta_i, comme si le mur était semi-infini
+
+        Gamma_per = (Zm*np.cos(theta_i)-Z0*np.cos(theta_t))/(Zm*np.cos(theta_i)+Z0*np.cos(theta_t))
+
+
+        #Calcul du coeff de réflexion total et de son module
+
+        C = Gamma_per**2
+        D = np.exp(-2*gamma_m*s)
+        E = np.exp(2j*beta*s*np.sin(theta_t)*np.sin(theta_i))
+        F = (1-C)
+        G = F*Gamma_per*D*E
+        H = 1-C*D*E
+        Gamma_m = Gamma_per + G/H
+
+
+        return(np.absolute(Gamma_m))
+
+
+    
+
+     #Permet d'obtenir le module du coeff. de transmission sur un mur d'épaisseur d en fonction de l'angle d'incidence, qui doit être en RADIANS
+
+    def get_coeff_trans (self, theta_i, d):
+
+        T_m = 1 - self.get_coeff_reflex(theta_i,d)
+
+        return(T_m)
+         
+         
+         
+        
     
     
     
