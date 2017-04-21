@@ -4,7 +4,7 @@ import matplotlib as mp
 from graphics import *
 from Wall import Wall
 
-def GUI(walls,xmax,ymax):
+def GUI(walls,xmax,ymax, rays):
     "L'origine des coordonnées (x=0,y=0) est en haut à gauche"
     "ATTENTION quand on accède à une matrice c'est colonnes puis lignes"
     "ATTENTION le index commencent en (0,0)"
@@ -29,6 +29,10 @@ def GUI(walls,xmax,ymax):
             line.setOutline('red')
         elif wall.mat==3:
             line.setOutline('blue')
+
+    for ray in rays:
+        line = Line(Point(ray[0][0],ray[0][1]), Point(ray[1][0],ray[1][1]))
+        line.draw(win)
             
 ##    while(1):
 ##        clickpoint = win.checkMouse()

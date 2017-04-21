@@ -6,7 +6,8 @@ class Model:
     def __init__(self,xmax,ymax):
         self.xmax=xmax
         self.ymax=ymax
-        self.matrice=np.zeros([xmax,ymax])
+        #self.matrice=np.zeros([xmax_m,ymax_m]) 
+                                            
         self.walls = [0]
         
     def setwalls(self,xmax,ymax,cat):
@@ -46,13 +47,13 @@ class Model:
 
 
 
-    def setmatrice(self):
-     #ajout des walls à la matrice
-        for wall in self.walls:
-            self.matrice[wall.x1:wall.x2+1,wall.y1:wall.y2+1]=wall.mat
-        
-    def getmatrice(self):
-        return self.matrice
+##    def setmatrice(self):
+##     #ajout des walls à la matrice
+##        for wall in self.walls:
+##            self.matrice[wall.x1:wall.x2+1,wall.y1:wall.y2+1]=wall.mat
+##        
+##    def getmatrice(self):
+##        return self.matrice
 
     def getwalls(self):
     
