@@ -7,8 +7,8 @@ from Antenna import *
 from ref_tr_diff import *
 
 #taille de la carte et initialisation des murs
-xmax=50
-ymax=50
+xmax=900
+ymax=900
 
 model=Model(xmax,ymax)
 cat=2
@@ -18,8 +18,8 @@ model.setwalls(xmax,ymax, cat)
 #création émetteur et récepteur
 gain=1
 
-tx=Antenna(gain,10,15)
-rx=Antenna(gain,25,32)
+tx=Antenna(gain,200,150)
+rx=Antenna(gain,579,328)
 
 #ATTENTION ici tx et rx désignent l'émetteur et le récepteur, mais
 #dans la fct reflexion ils désignent le tuple contenant la position

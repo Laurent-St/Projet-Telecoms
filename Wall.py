@@ -18,6 +18,7 @@ class Wall:
         if mat==1: # 1 = brique
             self.eps_r=4.6
             self.sig=0.02
+            self.d=0.1
         elif mat==2: # 2 = beton
             self.eps_r=5
             self.sig=0.014
@@ -30,7 +31,7 @@ class Wall:
 
         #Permet d'obtenir le module du coeff. de réflexion sur un mur d'épaisseur d en fonction de l'angle d'incidence, qui doit être en RADIANS
 
-    def get_coeff_reflex (self, theta_i, d):
+    def get_coeff_reflex (self, theta_i):
 
         #Calcul des permittivités
         eps = self.eps_r*eps_0
@@ -49,7 +50,7 @@ class Wall:
 
         #Calcul de la distance parcourue dans le mur
 
-        s = d/np.cos(theta_t)
+        s = self.d/np.cos(theta_t)
 
 
 
@@ -86,9 +87,9 @@ class Wall:
 
      #Permet d'obtenir le module du coeff. de transmission sur un mur d'épaisseur d en fonction de l'angle d'incidence, qui doit être en RADIANS
 
-    def get_coeff_trans (self, theta_i, d):
+    def get_coeff_trans (self, theta_i):
 
-        T_m = 1 - self.get_coeff_reflex(theta_i,d)
+        T_m = 1 - self.get_coeff_reflex(theta_i)
 
         return(T_m)
          
