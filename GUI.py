@@ -31,7 +31,7 @@ def GUI(walls,xmax,ymax, rays):
             line.setOutline('blue')
 
     for ray in rays:
-        line = Line(Point(ray[0][0],ray[0][1]), Point(ray[1][0],ray[1][1]))
+        line = Line(Point(ray.x1,ray.y1), Point(ray.x2,ray.y2))
         line.draw(win)
             
 ##    while(1):

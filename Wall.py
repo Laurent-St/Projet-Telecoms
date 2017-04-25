@@ -22,9 +22,11 @@ class Wall:
         elif mat==2: # 2 = beton
             self.eps_r=5
             self.sig=0.014
+            self.d=0.25
         elif mat==3: # 3 = cloison
             self.eps_r=2.25
             self.sig=0.04
+            self.d=0.05
 
     def getmat(self):
         return self.mat
@@ -83,7 +85,7 @@ class Wall:
         return(np.absolute(Gamma_m))
 
 
-    
+
 
      #Permet d'obtenir le module du coeff. de transmission sur un mur d'épaisseur d en fonction de l'angle d'incidence, qui doit être en RADIANS
 
@@ -92,10 +94,3 @@ class Wall:
         T_m = 1 - self.get_coeff_reflex(theta_i)
 
         return(T_m)
-         
-         
-         
-        
-    
-    
-    

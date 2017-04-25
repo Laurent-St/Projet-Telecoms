@@ -1,3 +1,5 @@
-from Wall import*
+from test import *
 
-print(get_coeff_reflex(pi, 0.05))
+line1=[(0,0),(0,10)]
+line2=[(-2,8),(9,8)]
+x=intersection(line1,line2)
