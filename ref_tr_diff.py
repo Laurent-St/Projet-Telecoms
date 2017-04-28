@@ -2,7 +2,7 @@ from fctsmath import *
 import math as m
 from Ray import *
 
-def reflexion(tx,rx,xmax,ymax,walls):
+def reflexion(tx,rx,walls):
     """
     tx et rx sont des tuples contenant la position en x et en y de l'émetteur et du récepteur
     ATTENTION: les recherches des 4 murs ainsi que des pts images, et l'attribution des rayons sont toujours faits dans l'ordre suivant:
@@ -42,10 +42,10 @@ def reflexion(tx,rx,xmax,ymax,walls):
             wallup.append(wall)
             #calcule l'intersection entre une ligne verticale partant de tx vers le haut, et le mur
             imup.append((tx[0],2*wall.y1-tx[1]))
-            print(2*wall.y1-tx[1])
-            print('testup')
-            print(wallup[0].x1)
-            print(imup[0])
+            # print(2*wall.y1-tx[1])
+            # print('testup')
+            # print(wallup[0].x1)
+            # print(imup[0])
 ##
 ##            if abs(interrup[1]-tx[1])<minup:
 ##                minup=abs(interrup[1]-tx[1])
@@ -55,7 +55,7 @@ def reflexion(tx,rx,xmax,ymax,walls):
             interleft.append(line_intersection([tx,(wall.x1,tx[1])],[(wall.x1,wall.y1),(wall.x2,wall.y2)]))
             wallleft.append(wall)
             imleft.append((2*wall.x1-tx[0],tx[1]))
-            print('testleft')
+            # print('testleft')
 
 ##            if abs(interleft[0]-tx[0])<minleft:
 ##                minleft=abs(interleft[0]-tx[0])
@@ -65,7 +65,7 @@ def reflexion(tx,rx,xmax,ymax,walls):
             interdown.append(line_intersection([tx,(tx[0],wall.y1)],[(wall.x1,wall.y1),(wall.x2,wall.y2)]))
             walldown.append(wall)
             imdown.append((tx[0],2*wall.y1-tx[1]))
-            print('testdown')
+            # print('testdown')
 
 ##            if abs(interdown[1]-tx[1])<mindown:
 ##                mindown=abs(interdown[1]-tx[1])
@@ -83,7 +83,7 @@ def reflexion(tx,rx,xmax,ymax,walls):
     #3) pts d'intersection entre mur et droite ptimage-rx, et tracer les rayons
 ##    pt_inter=[]
     rays=[] #2 fois plus grande que pt_inter car 2 rayons par réflexion
-    print(wallup[0])
+    # print(wallup[0])
 ##    j=0 #compteur pour les rayons
 ##    for i in range (0,4):
 ##        pt_inter[i]=segment_intersec([im[i],rx],[(reswall[i].x1,reswall[i].y1),(reswall[i].x2,reswall[i].y2)])
@@ -98,17 +98,17 @@ def reflexion(tx,rx,xmax,ymax,walls):
         if pt_inter_right_i != None:
 
             #line1=[tx,pt_inter_right[i]]
-            ray1=Ray(tx[0],tx[1],pt_inter_right[i][0],pt_inter_right[i][1],1) #rayon 1 entre tx et le pt d'intersection, coef est mis à 1
+            ray1=Ray(tx[0],tx[1],pt_inter_right[i][0],pt_inter_right[i][1],1,None) #rayon 1 entre tx et le pt d'intersection, coef est mis à 1
             #recherche des transmissions de ray1
             for wall in wallright: #juste sur les murs à droite de l'émetteur (logique)
-                if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter":
+                if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter" and wall !=wallright[i]:
                     theta_itr=m.pi/2-calcAngle_ref([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)]) #angle d'incidence de TRANSMISSION
                     ray1.coef=ray1.coef*wall.get_coeff_trans(theta_itr)
 
-            ray2=Ray(pt_inter_right[i][0],pt_inter_right[i][1],rx[0],rx[1],ray1.coef) #rayon 2 entre le pt d'intersection et rx
+            ray2=Ray(pt_inter_right[i][0],pt_inter_right[i][1],rx[0],rx[1],ray1.coef,dis_eucl(imright[i],rx)) #rayon 2 entre le pt d'intersection et rx
             #recherche des transmisssions de ray2
             for wall in walls:
-                if segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter":
+                if segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter" and wall != wallright[i]:
                     theta_itr=m.pi/2-calcAngle_ref([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])
                     ray2.coef=ray2.coef*wall.get_coeff_trans(theta_itr)
 
@@ -119,23 +119,23 @@ def reflexion(tx,rx,xmax,ymax,walls):
 
     pt_inter_up=[]
     for i in range(0,len(wallup)):
-        print('interupok')
+        # print('interupok')
         pt_inter_up_i=segment_intersec([imup[i],rx],[(wallup[i].x1,wallup[i].y1),(wallup[i].x2,wallup[i].y2)])
         pt_inter_up.append(pt_inter_up_i)
         if pt_inter_up_i != None:
 
-            print(pt_inter_up)
-            ray1=Ray(tx[0],tx[1],pt_inter_up[i][0],pt_inter_up[i][1],1) #rayon 1 entre tx et le pt d'intersection, coef est mis à 1
+            # print(pt_inter_up)
+            ray1=Ray(tx[0],tx[1],pt_inter_up[i][0],pt_inter_up[i][1],1,None) #rayon 1 entre tx et le pt d'intersection, coef est mis à 1
             #recherche des transmissions de ray1
             for wall in wallup: #juste sur les murs à droite de l'émetteur (logique)
-                if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter":
+                if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter" and wall != wallup[i]:
                     theta_itr=m.pi/2-calcAngle_ref([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)]) #angle d'incidence de TRANSMISSION
                     ray1.coef=ray1.coef*wall.get_coeff_trans(theta_itr)
 
-            ray2=Ray(pt_inter_up[i][0],pt_inter_up[i][1],rx[0],rx[1],ray1.coef) #rayon 2 entre le pt d'intersection et rx
+            ray2=Ray(pt_inter_up[i][0],pt_inter_up[i][1],rx[0],rx[1],ray1.coef,dis_eucl(imup[i],rx)) #rayon 2 entre le pt d'intersection et rx
             #recherche des transmisssions de ray2
             for wall in walls:
-                if segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter":
+                if segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter" and wall != wallup[i]:
                     theta_itr=m.pi/2-calcAngle_ref([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])
                     ray2.coef=ray2.coef*wall.get_coeff_trans(theta_itr)
 
@@ -146,22 +146,22 @@ def reflexion(tx,rx,xmax,ymax,walls):
 
     pt_inter_left=[]
     for i in range(0,len(wallleft)):
-        print('wallleftok')
+        # print('wallleftok')
         pt_inter_left_i=segment_intersec([imleft[i],rx],[(wallleft[i].x1,wallleft[i].y1),(wallleft[i].x2,wallleft[i].y2)])
         pt_inter_left.append(pt_inter_left_i)
         if pt_inter_left_i != None:
 
-            ray1=Ray(tx[0],tx[1],pt_inter_left[i][0],pt_inter_left[i][1],1) #rayon 1 entre tx et le pt d'intersection, coef est mis à 1
+            ray1=Ray(tx[0],tx[1],pt_inter_left[i][0],pt_inter_left[i][1],1,None) #rayon 1 entre tx et le pt d'intersection, coef est mis à 1
             #recherche des transmissions de ray1
             for wall in wallleft: #juste sur les murs à droite de l'émetteur (logique)
-                if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter":
+                if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter" and wall != wallleft[i]:
                     theta_itr=m.pi/2-calcAngle_ref([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)]) #angle d'incidence de TRANSMISSION
                     ray1.coef=ray1.coef*wall.get_coeff_trans(theta_itr)
 
-            ray2=Ray(pt_inter_left[i][0],pt_inter_left[i][1],rx[0],rx[1],ray1.coef) #rayon 2 entre le pt d'intersection et rx
+            ray2=Ray(pt_inter_left[i][0],pt_inter_left[i][1],rx[0],rx[1],ray1.coef,dis_eucl(imleft[i],rx)) #rayon 2 entre le pt d'intersection et rx
             #recherche des transmisssions de ray2
             for wall in walls:
-                if segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter":
+                if segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter" and wall != wallleft[i]:
                     theta_itr=m.pi/2-calcAngle_ref([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])
                     ray2.coef=ray2.coef*wall.get_coeff_trans(theta_itr)
 
@@ -176,17 +176,17 @@ def reflexion(tx,rx,xmax,ymax,walls):
         pt_inter_down.append(pt_inter_down_i)
         if pt_inter_down_i != None:
 
-            ray1=Ray(tx[0],tx[1],pt_inter_down[i][0],pt_inter_down[i][1],1) #rayon 1 entre tx et le pt d'intersection, coef est mis à 1
+            ray1=Ray(tx[0],tx[1],pt_inter_down[i][0],pt_inter_down[i][1],1,None) #rayon 1 entre tx et le pt d'intersection, coef est mis à 1
             #recherche des transmissions de ray1
             for wall in walldown: #juste sur les murs à droite de l'émetteur (logique)
-                if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter":
+                if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter" and wall != walldown[i]:
                     theta_itr=m.pi/2-calcAngle_ref([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)]) #angle d'incidence de TRANSMISSION
                     ray1.coef=ray1.coef*wall.get_coeff_trans(theta_itr)
 
-            ray2=Ray(pt_inter_down[i][0],pt_inter_down[i][1],rx[0],rx[1],ray1.coef) #rayon 2 entre le pt d'intersection et rx
+            ray2=Ray(pt_inter_down[i][0],pt_inter_down[i][1],rx[0],rx[1],ray1.coef,dis_eucl(imdown[i],rx)) #rayon 2 entre le pt d'intersection et rx
             #recherche des transmisssions de ray2
             for wall in walls:
-                if segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter":
+                if segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!="no_inter" and wall != walldown[i]:
                     theta_itr=m.pi/2-calcAngle_ref([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])
                     ray2.coef=ray2.coef*wall.get_coeff_trans(theta_itr)
 

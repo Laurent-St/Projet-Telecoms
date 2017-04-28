@@ -17,17 +17,53 @@ model.setwalls(xmax,ymax, cat)
 
 #création émetteur et récepteur
 gain=1
+txx=78
+txy=246
+rxx=376 #rxx et rxy sont les coordonnées en haut à gauche de la zone de réception
+rxy=443
 
+raystot=[]
 tx=Antenna(gain,78,246)
-rx=Antenna(gain,376,443)
+tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
+PRX=0 #puissance totale
+ls_PRX_pt_ij=[]
+for i in range(0,4):
+    for j in range(0,4):
+        rx=Antenna(gain,rxx+i,rxy+j)
+        rays=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+        PRX_pt_ij=0 #puissance recue juste au point considéré
+        for ray in rays:
+            raystot.append(ray)
+            if ray.dis != None:
+                PRX_pt_ij==PRX_pt_ij+ray.get_PRX_individuelle(tx)
+        PRX=PRX+PRX_pt_ij
+        ls_PRX_pt_ij.append(PRX_pt_ij)
+        
+PRX=PRX/nbre_pts
+
+                
+nbre_pts=(i+1)*(j+1)
+print('nbre de pts=')
+print(nbre_pts)
+
+##rx=Antenna(gain,rxx,rxy)
+##raystot=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+
+#calcul de la puissance
+##PRX=0
+##for ray in raystot:
+##    if ray.dis != None:
+##        PRX=PRX+ray.get_PRX_individuelle(tx)
+
+
 
 #ATTENTION ici tx et rx désignent l'émetteur et le récepteur, mais
 #dans la fct reflexion ils désignent le tuple contenant la position
 
 #réflexion
-rays=reflexion((tx.x,tx.y),(rx.x,rx.y),xmax,ymax,model.getwalls())
-GUI(model.getwalls(),xmax,ymax,rays)
 
+GUI(model.getwalls(),xmax,ymax,raystot,ls_PRX_pt_ij,(rxx,rxy))
+print(PRX)
 
 
 """
