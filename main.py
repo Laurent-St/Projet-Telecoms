@@ -18,8 +18,8 @@ model.setwalls(xmax,ymax, cat)
 #création émetteur et récepteur
 gain=1
 
-tx=Antenna(gain,200,150)
-rx=Antenna(gain,300,328)
+tx=Antenna(gain,78,246)
+rx=Antenna(gain,376,443)
 
 #ATTENTION ici tx et rx désignent l'émetteur et le récepteur, mais
 #dans la fct reflexion ils désignent le tuple contenant la position
