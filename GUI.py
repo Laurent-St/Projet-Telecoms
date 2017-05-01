@@ -4,7 +4,7 @@ import matplotlib as mp
 from graphics import *
 from Wall import Wall
 
-def GUI(walls,xmax,ymax,rays,ls_PRX_pt_ij,rx):
+def GUI(walls,xmax,ymax,rays,rx):
     "L'origine des coordonnées (x=0,y=0) est en haut à gauche"
     "ATTENTION quand on accède à une matrice c'est colonnes puis lignes"
     "ATTENTION le index commencent en (0,0)"
@@ -39,11 +39,11 @@ def GUI(walls,xmax,ymax,rays,ls_PRX_pt_ij,rx):
         line.draw(win)
 
 
-    for i in range(0,4):
-        for j in range(0,4):
-            rect=Rectangle(Point(rx[0]+i,rx[1]+j),Point(rx[0]+i+1,rx[1]+j+1))
-            puissance=ls_PRX_pt_ij[i+j]
-            #AFFICHER LA COULEUR EN FCT DE L'INTENSITE
+##    for i in range(0,4):
+##        for j in range(0,4):
+##            rect=Rectangle(Point(rx[0]+i,rx[1]+j),Point(rx[0]+i+1,rx[1]+j+1))
+##            puissance=ls_PRX_pt_ij[i+j]
+##            #AFFICHER LA COULEUR EN FCT DE L'INTENSITE
 
 
 ##    while(1):

@@ -17,37 +17,37 @@ model.setwalls(xmax,ymax, cat)
 
 #création émetteur et récepteur
 gain=1
-txx=78
-txy=246
-rxx=376 #rxx et rxy sont les coordonnées en haut à gauche de la zone de réception
-rxy=443
+txx=100
+txy=300
+rxx=350 #rxx et rxy sont les coordonnées en haut à gauche de la zone de réception
+rxy=100
 
 raystot=[]
-tx=Antenna(gain,78,246)
+tx=Antenna(gain,txx,txy)
 tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
 PRX=0 #puissance totale
-ls_PRX_pt_ij=[]
-for i in range(0,4):
-    for j in range(0,4):
-        rx=Antenna(gain,rxx+i,rxy+j)
-        rays=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
-        PRX_pt_ij=0 #puissance recue juste au point considéré
-        for ray in rays:
-            raystot.append(ray)
-            if ray.dis != None:
-                PRX_pt_ij==PRX_pt_ij+ray.get_PRX_individuelle(tx)
-        PRX=PRX+PRX_pt_ij
-        ls_PRX_pt_ij.append(PRX_pt_ij)
-        
-PRX=PRX/nbre_pts
+##ls_PRX_pt_ij=[]
+##for i in range(0,4):
+##    for j in range(0,4):
+##        rx=Antenna(gain,rxx+i,rxy+j)
+##        rays=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+##        PRX_pt_ij=0 #puissance recue juste au point considéré
+##        for ray in rays:
+##            raystot.append(ray)
+##            if ray.dis != None:
+##                PRX_pt_ij==PRX_pt_ij+ray.get_PRX_individuelle(tx)
+##        PRX=PRX+PRX_pt_ij
+##        ls_PRX_pt_ij.append(PRX_pt_ij)
+##        
+##PRX=PRX/nbre_pts
+##
+##                
+##nbre_pts=(i+1)*(j+1)
+##print('nbre de pts=')
+##print(nbre_pts)
 
-                
-nbre_pts=(i+1)*(j+1)
-print('nbre de pts=')
-print(nbre_pts)
-
-##rx=Antenna(gain,rxx,rxy)
-##raystot=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+rx=Antenna(gain,rxx,rxy)
+raystot=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
 
 #calcul de la puissance
 ##PRX=0
@@ -62,7 +62,7 @@ print(nbre_pts)
 
 #réflexion
 
-GUI(model.getwalls(),xmax,ymax,raystot,ls_PRX_pt_ij,(rxx,rxy))
+GUI(model.getwalls(),xmax,ymax,raystot,(rxx,rxy))
 print(PRX)
 
 

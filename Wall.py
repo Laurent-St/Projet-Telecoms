@@ -33,7 +33,7 @@ class Wall:
 
         #Permet d'obtenir le module du coeff. de réflexion sur un mur d'épaisseur d en fonction de l'angle d'incidence, qui doit être en RADIANS
 
-    def get_coeff_reflex (self, theta_i):
+    def get_coeff_reflex(self, theta_i):
 
         #Calcul des permittivités
         eps = self.eps_r*eps_0
