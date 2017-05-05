@@ -71,3 +71,8 @@ def dis_eucl(p1,p2):
 	a = p1[0]-p2[0]
 	b=p1[1]-p2[1]
 	return(np.sqrt(a**2 + b**2))
+
+def calc_angle_diff(vector1,vector2):
+    norms = np.linalg.norm(vector1)*np.linalg.norm(vector2)
+    theta = np.arccos((vector1[0]*vector2[0] + vector1[1]*vector2[1])/norms)
+    return theta
