@@ -32,16 +32,16 @@ def GUI(walls,xmax,ymax,rays,lsPRX):
     plt.gca().invert_yaxis()
 
 #### AFFICHAGE DES RAYONS #################################################
-#    for ray in rays:
-#        plt.plot((ray.x1,ray.x2),(ray.y1,ray.y2),color=ray.getcolor())
+    for ray in rays:
+        plt.plot((ray.x1,ray.x2),(ray.y1,ray.y2),color=ray.getcolor())
 
 ############################################################################
 
 #### AFFICHAGE DE LA PUISSANCE #############################################
-    cmap = plt.get_cmap('jet')
-    plt.imshow(lsPRX, interpolation="nearest", cmap=cmap)
-    cb = plt.colorbar()
-    cb.set_label('Puissance reçue [dBm]')
+#    cmap = plt.get_cmap('jet')
+#    plt.imshow(lsPRX, interpolation="nearest", cmap=cmap)
+#    cb = plt.colorbar()
+#    cb.set_label('Puissance reçue [dBm]')
 #############################################################################
     plt.ion()
     plt.show()

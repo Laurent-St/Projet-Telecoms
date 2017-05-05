@@ -66,10 +66,10 @@ GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)"""
 
 """Calcul juste en un point"""
 gain=1
-txx=100
+txx=300
 txy=300
-rxx=150
-rxy=400
+rxx=300
+rxy=320
 tx=Antenna(gain,txx,txy)
 tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
 rx=Antenna(gain,rxx,rxy)
@@ -91,8 +91,16 @@ PRX=0
 ##print('Puissance moyenne=',PRX)
 ##print('Puissance moyenne[dBm]=',PRX_dBm)
 
-lsPRX=[PRX]
-GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)
+
+for ray in raystot:
+    if ray.dis != None:
+        PRX+=ray.get_PRX_individuelle(tx)
+
+PRX=10*np.log(PRX/0.001) #on passe en dBm seulement à la fin
+print(PRX)
+
+#print(lsPRX)
+GUI(model.getwalls(),xmax,ymax,raystot,PRX)
 
 
 """
