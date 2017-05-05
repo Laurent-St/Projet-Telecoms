@@ -5,6 +5,7 @@ import numpy as np
 from fctsmath import *
 from Antenna import *
 from ref_tr_diff import *
+from isinwall import *
 
 #taille de la carte et initialisation des murs
 xmax=50
@@ -27,7 +28,7 @@ tx=Antenna(gain,txx,txy)
 tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
 PRX=0 #puissance moyenne
 #lsPRX=[[0]*xmax]*ymax
-lsPRX=np.zeros((ymax,xmax)) #np.zeros((lignes,colonnes))
+lsPRX=np.zeros((ymax+1,xmax+1)) #np.zeros((lignes,colonnes))
 #lsPRX est la liste des puissances EN DBM
 #MAIS ATTENTION il faut calculer le log après avoir sommé toutes les contributions,
 #et pas sommer des logarithmes!!!
@@ -38,25 +39,26 @@ for i in range(0,ymax): #i: dimension y
     for j in range(0,xmax): #j: dimension x
     #for j in np.arange(0.1,xmax,0.1):
         #print('j=',j)
-        rx=Antenna(gain,i,j) #on crée une antenne réceptrice en chaque point
-        rays=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
-        ray_direct=onde_directe((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
-        #print('ray_direct.dis=',ray_direct.dis)
-        lsPRX[i][j]=ray_direct.get_PRX_individuelle(tx) #puissance recue juste au point considéré
-        #print('lsPRX[i][j]=',lsPRX[i][j])
-        raystot.append(ray_direct)
-        for ray in rays:
-            raystot.append(ray)
-            if ray.dis != None:
-                lsPRX[i][j]=lsPRX[i][j]+ray.get_PRX_individuelle(tx)
-        PRX=PRX+lsPRX[i][j]
-        lsPRX[i][j]=10*np.log(lsPRX[i][j]/0.001) #on passe en dBm seulement à la fin
+        if isinwall(model.getwalls(),j,i) == False:
+            rx=Antenna(gain,i,j) #on crée une antenne réceptrice en chaque point
+            rays=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+            ray_direct=onde_directe((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+            #print('ray_direct.dis=',ray_direct.dis)
+            lsPRX[i][j]=ray_direct.get_PRX_individuelle(tx) #puissance recue juste au point considéré
+            #print('lsPRX[i][j]=',lsPRX[i][j])
+            raystot.append(ray_direct)
+            for ray in rays:
+                raystot.append(ray)
+                if ray.dis != None:
+                    lsPRX[i][j]=lsPRX[i][j]+ray.get_PRX_individuelle(tx)
+            PRX=PRX+lsPRX[i][j]
+            lsPRX[i][j]=10*np.log(lsPRX[i][j]/0.001) #on passe en dBm seulement à la fin
 
 #print(lsPRX)
                  
-nbre_pts=xmax*ymax
-PRX=PRX/nbre_pts
-PRX_dBm=10*np.log(PRX/0.001)
+#nbre_pts=xmax*ymax
+#PRX=PRX/nbre_pts
+#PRX_dBm=10*np.log(PRX/0.001)
 
 GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)
 

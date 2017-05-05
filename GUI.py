@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib as mp
 import matplotlib.pyplot as plt
-from graphics import *
+
 from Wall import Wall
 
 def GUI(walls,xmax,ymax,rays,lsPRX):
@@ -27,13 +27,13 @@ def GUI(walls,xmax,ymax,rays,lsPRX):
             x='red'
         else:
             x='blue'
-        plt.plot((wall.x1,wall.x2),(wall.y1,wall.y2),color=x)
+        plt.plot((wall.x1,wall.x2),(wall.y1,wall.y2),color=x,linewidth=3.0)
 
     plt.gca().invert_yaxis()
 
 #### AFFICHAGE DES RAYONS #################################################
-    # for ray in rays:
-    #     plt.plot((ray.x1,ray.x2),(ray.y1,ray.y2),color=ray.getcolor())
+#    for ray in rays:
+#        plt.plot((ray.x1,ray.x2),(ray.y1,ray.y2),color=ray.getcolor())
 
 ############################################################################
 

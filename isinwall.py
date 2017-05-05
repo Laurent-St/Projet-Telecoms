@@ -26,3 +26,4 @@ def isinwall(walls,x,y):
             elif wall.y1 > wall.y2:
                 if wall.y1 >= x and wall.y2 <= y:
                     res = True
+    return res
