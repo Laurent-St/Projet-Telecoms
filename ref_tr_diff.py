@@ -3,6 +3,14 @@ import math as m
 from Ray import *
 from Wall import *
 
+def onde_directe(tx,rx, walls):
+    ray1=Ray(tx[0],tx[1],rx[0],rx[1],1,dis_eucl(tx,rx))
+    for wall in walls:
+        if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!=None:
+            theta_itr=m.pi/2-calcAngle_ref([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)]) #angle d'incidence de TRANSMISSION
+            ray1.coef=ray1.coef*wall.get_coeff_trans(theta_itr)
+    return ray1
+
 def reflexion(tx,rx,walls):
     """
     tx et rx sont des tuples contenant la position en x et en y de l'émetteur et du récepteur
@@ -197,16 +205,6 @@ def reflexion(tx,rx,walls):
             rays.append(ray2)
 
 
-    print(wallright)
-    print(wallup)
-    print(wallleft)
-    print(walldown)
-    print(imright)
-    print(imup)
-    print(imleft)
-    print(imdown)
-
-
     #4) Reflexion double: A FAIRE
 
 
@@ -253,7 +251,7 @@ def reflexion(tx,rx,walls):
         #Mur de droite partie haute
         ###############
         for wall in wallup :
-            print('for wall in wallup')
+            #print('for wall in wallup')
             #calcul des points d'image seconde au dessus
 
             ypp_up = (im[0],2 * wall.y1 - im[1])
@@ -261,23 +259,23 @@ def reflexion(tx,rx,walls):
 
             #calcul des points de deuxième réflexion et des rayons liants le récepteur au point de seconde réflexion
             p2 = segment_intersec([(rx[0],rx[1]),ypp_up],[(wall.x1,wall.y1),(wall.x2,wall.y2)])
-            print('p2droitehaut=',p2)
+            #print('p2droitehaut=',p2)
             if p2 != None:
                 #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
                 p1 = segment_intersec([p2,im],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
-                print('p1droitehaute',p1)
+                #print('p1droitehaute',p1)
                 if p1 != None:
                     #en effet, il se peut que le mur devant subir la seconde réflexion soit "trop court", et donc que le point p2 se retrouve
                     #sur le mur de droite et pas celui du haut, ce qui aurait pour conséquence  que p1 == p2 il faut donc proscrire l'ensemble de
                     #ces cas
                     if p1 != p2:
-                        print('droitehaut')
+                        #print('droitehaut')
                         ptreflex2.append(p2)
                         r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
-                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,0)
+                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,None)
                         rayreflex1.append(r1)
 
                         #calcul de l'angle d'incidence de première et 2e réflexion
@@ -285,7 +283,7 @@ def reflexion(tx,rx,walls):
                         theta_1 = m.pi/2 - calcAngle_ref([p2,p1],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
 
                         #tracage des rayons allant de l'emetteur au premier point de réflexion
-                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,0)
+                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,None)
                         rayemett.append(r0)
 
                         #Calcul des coefficients de transmission des rayons emetteur-p1
@@ -298,7 +296,7 @@ def reflexion(tx,rx,walls):
                         #Calcul des coefficients de transmission et réflexion des rayons p1-p2
                         for wallbis in walls:
                             if segment_intersec([(r1.x1,r1.y1),(r1.x2,r1.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None and wallbis != wall and wallbis != tempwall:
-                                #les 2e et 3e cdts du if sont pour éviter de calculer une transmission sur les 2 murs gauche et haut sur lesquels il ya réflexion
+                                #les 2e et 3e cdts du if sont pour éviter de calculer une transmission sur les 2 murs gauche et haut sur lesquels il y a réflexion
                                 theta_itr=m.pi/2-calcAngle_ref([(r1.x1,r1.y1),(r1.x2,r1.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])
                                 r1.coef=r1.coef*wallbis.get_coeff_trans(theta_itr)
 
@@ -306,7 +304,7 @@ def reflexion(tx,rx,walls):
 
                         #Calcul des coefficients de transmission et réflexion des rayons p2-recepteur
                         for wallbis in walls:
-                            if segment_intersec([(r2.x1,r2.y1),(r2.x2,r2.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None and wallbis != wall:
+                            if segment_intersec([(r2.x1,r2.y1),(r2.x2,r2.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None and wallbis != wall and wallbis != tempwall:
                                 #ici pas de 3e cdt car on est juste sur le mur du dessus
                                 theta_itr=m.pi/2-calcAngle_ref([(r2.x1,r2.y1),(r2.x2,r2.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])
                                 r2.coef=r2.coef*wallbis.get_coeff_trans(theta_itr)
@@ -322,20 +320,20 @@ def reflexion(tx,rx,walls):
 
             #calcul des points de deuxième réflexion et des rayons liants le récepteur au point de seconde réflexion
             p2 = segment_intersec([(rx[0],rx[1]),ypp_down],[(wall.x1,wall.y1),(wall.x2,wall.y2)])
-            print('2e p2:',p2)
+            #print('2e p2:',p2)
             if p2 != None:
                 #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
                 p1 = segment_intersec([p2,im],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
                 if p1 != None:
 
                     if p1 != p2:
-                        print('droitebas')
+                        #print('droitebas')
                         ptreflex2.append(p2)
                         r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
-                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,0)
+                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,None)
                         rayreflex1.append(r1)
 
                          #calcul de l'angle d'incidence de première et 2e réflexion
@@ -343,12 +341,12 @@ def reflexion(tx,rx,walls):
                         theta_1 = m.pi/2 - calcAngle_ref([p2,p1],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
 
                         #tracage des rayons allant de l'emetteur au premier point de réflexion
-                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,0)
+                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,None)
                         rayemett.append(r0)
 
                         #Calcul des coefficients de transmission des rayons emetteur-p1
                         for wallbis in wallright:
-                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)]) != None:
+                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)]) != None and wallbis != tempwall:
                                 theta_itr=m.pi/2-calcAngle_ref([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])
                                 r0.coef=r0.coef*wallbis.get_coeff_trans(theta_itr)
 
@@ -384,20 +382,20 @@ def reflexion(tx,rx,walls):
 
             #calcul des points de deuxième réflexion et des rayons liants le récepteur au point de seconde réflexion
             p2 = segment_intersec([(rx[0],rx[1]),ypp_right],[(wall.x1,wall.y1),(wall.x2,wall.y2)])
-            print('3e p2=',p2)
+            #print('3e p2=',p2)
             if p2 != None:
                 #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
                 p1 = segment_intersec([p2,im],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
 
                 if p1 != None:
                     if p1 != p2:
-                        print('basdroite')
+                        #print('basdroite')
                         ptreflex2.append(p2)
                         r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
-                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,0)
+                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,None)
                         rayreflex1.append(r1)
 
                         #calcul de l'angle d'incidence de première et 2e réflexion
@@ -405,12 +403,12 @@ def reflexion(tx,rx,walls):
                         theta_1 = m.pi/2 - calcAngle_ref([p2,p1],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
 
                         #tracage des rayons allant de l'emetteur au premier point de réflexion
-                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,0)
+                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,None)
                         rayemett.append(r0)
 
                         #Calcul des coefficients de transmission des rayons emetteur-p1
                         for wallbis in wallright:
-                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None:
+                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None and wallbis != tempwall:
                                 theta_itr=m.pi/2-calcAngle_ref([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])
                                 r0.coef=r0.coef*wallbis.get_coeff_trans(theta_itr)
 
@@ -448,13 +446,13 @@ def reflexion(tx,rx,walls):
                 if p1 != None:
 
                     if p1 != p2:
-                        print('basgauche')
+                        #print('basgauche')
                         ptreflex2.append(p2)
                         r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
-                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,0)
+                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,None)
                         rayreflex1.append(r1)
 
                         #calcul de l'angle d'incidence de première et 2e réflexion
@@ -462,12 +460,12 @@ def reflexion(tx,rx,walls):
                         theta_1 = m.pi/2 - calcAngle_ref([p2,p1],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
 
                         #tracage des rayons allant de l'emetteur au premier point de réflexion
-                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,0)
+                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,None)
                         rayemett.append(r0)
 
                         #Calcul des coefficients de transmission des rayons emetteur-p1
                         for wallbis in wallright:
-                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None:
+                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None and wallbis != tempwall:
                                 theta_itr=m.pi/2-calcAngle_ref([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])
                                 r0.coef=r0.coef*wallbis.get_coeff_trans(theta_itr)
 
@@ -501,28 +499,28 @@ def reflexion(tx,rx,walls):
             #calcul des points d'image seconde au dessus
 
             ypp_up = (im[0],2 * wall.y1 - im[1])
-            print('imagegauchehaut',ypp_up)
+            #print('imagegauchehaut',ypp_up)
             imsecleftup.append(ypp_up)
 
             #calcul des points de deuxième réflexion et des rayons liants le récepteur au point de seconde réflexion
             p2 = segment_intersec([(rx[0],rx[1]),ypp_up],[(wall.x1,wall.y1),(wall.x2,wall.y2)])
-            print('p2gauchehaut=',p2)
+            #print('p2gauchehaut=',p2)
 
             if p2 != None:
                 #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
                 p1 = segment_intersec([p2,im],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
-                print('p1gauchehaut=',p1)
+                #print('p1gauchehaut=',p1)
 
                 if p1 != None:
 
                     if p1 != p2:
-                        print('gauchehaut')
+                        #print('gauchehaut')
                         ptreflex2.append(p2)
                         r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
-                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,0)
+                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,None)
                         rayreflex1.append(r1)
 
                         #calcul de l'angle d'incidence de première et 2e réflexion
@@ -530,12 +528,12 @@ def reflexion(tx,rx,walls):
                         theta_1 = m.pi/2 - calcAngle_ref([p2,p1],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
 
                         #tracage des rayons allant de l'emetteur au premier point de réflexion
-                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,0)
+                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,None)
                         rayemett.append(r0)
 
                         #Calcul des coefficients de transmission des rayons emetteur-p1
                         for wallbis in wallright:
-                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None:
+                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None and wallbis != tempwall:
                                 theta_itr=m.pi/2-calcAngle_ref([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])
                                 r0.coef=r0.coef*wallbis.get_coeff_trans(theta_itr)
 
@@ -560,12 +558,12 @@ def reflexion(tx,rx,walls):
         for wall in walldown :
             #calcul des points d'image seconde au dessous
             ypp_down = (im[0],2 * wall.y1 - im[1])
-            print('imagegauchebas',ypp_down)
+            #print('imagegauchebas',ypp_down)
             imsecleftdown.append(ypp_down)
 
             #calcul des points de deuxième réflexion et des rayons liants le récepteur au point de seconde réflexion
             p2 = segment_intersec([(rx[0],rx[1]),ypp_down],[(wall.x1,wall.y1),(wall.x2,wall.y2)])
-            print('p2gauchebasse',p2)
+            #print('p2gauchebasse',p2)
 
             if p2 != None:
                 #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
@@ -574,7 +572,7 @@ def reflexion(tx,rx,walls):
                 if p1 != None:
 
                     if p1 != p2:
-                        print('gauchebas')
+                        #print('gauchebas')
                         ptreflex2.append(p2)
                         r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
                         rayreflex2.append(r2)
@@ -582,7 +580,7 @@ def reflexion(tx,rx,walls):
                         #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
                         p1 = segment_intersec([p2,im],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
                         ptreflex1.append(p1)
-                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,0)
+                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,None)
                         rayreflex1.append(r1)
 
                         #calcul de l'angle d'incidence de première et 2e réflexion
@@ -590,12 +588,12 @@ def reflexion(tx,rx,walls):
                         theta_1 = m.pi/2 - calcAngle_ref([p2,p1],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
 
                         #tracage des rayons allant de l'emetteur au premier point de réflexion
-                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,0)
+                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,None)
                         rayemett.append(r0)
 
                         #Calcul des coefficients de transmission des rayons emetteur-p1
                         for wallbis in wallright:
-                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None:
+                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None and wallbis != tempwall:
                                 theta_itr=m.pi/2-calcAngle_ref([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])
                                 r0.coef=r0.coef*wallbis.get_coeff_trans(theta_itr)
 
@@ -638,7 +636,7 @@ def reflexion(tx,rx,walls):
                 if p1 != None:
 
                     if p2 != p1:
-                        print('hautdroit')
+                        #print('hautdroit')
                         ptreflex2.append(p2)
                         r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
                         rayreflex2.append(r2)
@@ -646,7 +644,7 @@ def reflexion(tx,rx,walls):
                         #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
                         p1 = segment_intersec([p2,im],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
                         ptreflex1.append(p1)
-                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,0)
+                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,None)
                         rayreflex1.append(r1)
 
                         #calcul de l'angle d'incidence de première et 2e réflexion
@@ -654,12 +652,12 @@ def reflexion(tx,rx,walls):
                         theta_1 = m.pi/2 - calcAngle_ref([p2,p1],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
 
                         #tracage des rayons allant de l'emetteur au premier point de réflexion
-                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,0)
+                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,None)
                         rayemett.append(r0)
 
                         #Calcul des coefficients de transmission des rayons emetteur-p1
                         for wallbis in wallright:
-                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None:
+                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None and wallbis != tempwall:
                                 theta_itr=m.pi/2-calcAngle_ref([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])
                                 r0.coef=r0.coef*wallbis.get_coeff_trans(theta_itr)
 
@@ -701,7 +699,7 @@ def reflexion(tx,rx,walls):
                         #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
                         p1 = segment_intersec([p2,im],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
                         ptreflex1.append(p1)
-                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,0)
+                        r1 = Ray(p1[0],p1[1],p2[0],p2[1],1,None)
                         rayreflex1.append(r1)
 
                         #calcul de l'angle d'incidence de première et 2e réflexion
@@ -709,12 +707,12 @@ def reflexion(tx,rx,walls):
                         theta_1 = m.pi/2 - calcAngle_ref([p2,p1],[(tempwall.x1,tempwall.y1),(tempwall.x2,tempwall.y2)])
 
                         #tracage des rayons allant de l'emetteur au premier point de réflexion
-                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,0)
+                        r0 = Ray(tx[0],tx[1],p1[0],p1[1],1,None)
                         rayemett.append(r0)
 
                         #Calcul des coefficients de transmission des rayons emetteur-p1
                         for wallbis in wallright:
-                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None:
+                            if segment_intersec([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])!=None and wallbis != tempwall:
                                 theta_itr=m.pi/2-calcAngle_ref([(r0.x1,r0.y1),(r0.x2,r0.y2)],[(wallbis.x1,wallbis.y1),(wallbis.x2,wallbis.y2)])
                                 r0.coef=r0.coef*wallbis.get_coeff_trans(theta_itr)
 
@@ -738,7 +736,7 @@ def reflexion(tx,rx,walls):
     rays.extend(rayemett)
     rays.extend(rayreflex1)
     rays.extend(rayreflex2)
-    
+
     return rays
 
     #SI ON VEUT JUSTE AVOIR LES DOUBLES REFLEXIONS

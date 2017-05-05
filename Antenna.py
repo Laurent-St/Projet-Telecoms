@@ -8,11 +8,11 @@ class Antenna:
         self.y=y
         self.power_emission=0
         self.power_reception=0
-        self.h_e=-38.98 # [m]
+        self.h_e=-0.038999 # [m]
 
         #VALEURS PAS SUREs
-        self.r_joule=1000 # [ohms]     #A MODIFIER
-        self.r_emission=1000            # A MODIFIER
+        self.r_joule=0 # [ohms]     #car antenne parfaite
+        self.r_emission=67 # [ohms]
         self.r_tot=self.r_joule+self.r_emission
 
     def setpower_emission(self,power_emission):

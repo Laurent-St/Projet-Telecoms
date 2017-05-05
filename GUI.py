@@ -1,10 +1,11 @@
 
 import numpy as np
 import matplotlib as mp
+import matplotlib.pyplot as plt
 from graphics import *
 from Wall import Wall
 
-def GUI(walls,xmax,ymax,rays,rx):
+def GUI(walls,xmax,ymax,rays,lsPRX):
     "L'origine des coordonnées (x=0,y=0) est en haut à gauche"
     "ATTENTION quand on accède à une matrice c'est colonnes puis lignes"
     "ATTENTION le index commencent en (0,0)"
@@ -17,26 +18,34 @@ def GUI(walls,xmax,ymax,rays,rx):
     "Un 0 représente un élément sans rien, un 1 de la brique, 2 béton et 3 une cloison"
 
     #tracé des murs
-    win=GraphWin('Window',xmax,ymax)  #objet prédéfini pour initialiser la fenetre avec Graphics
+
 
     for wall in walls:
+        if(wall.mat==1):
+            x='black'
+        elif (wall.mat==2):
+            x='red'
+        else:
+            x='blue'
+        plt.plot((wall.x1,wall.x2),(wall.y1,wall.y2),color=x)
 
-        p1=Point(wall.x1,wall.y1) #on fait *0.5 pour que tout s'affiche dans la fenetre
-        p2=Point(wall.x2,wall.y2)
-        line=Line(p1,p2)
-        line.draw(win)
-        if wall.mat==1:
-            line.setOutline('black')
-        elif wall.mat==2:
-            line.setOutline('red')
-        elif wall.mat==3:
-            line.setOutline('blue')
+    plt.gca().invert_yaxis()
 
-    for ray in rays:
-        line = Line(Point(ray.x1,ray.y1), Point(ray.x2,ray.y2))
-        line.setFill(ray.getcolor())
-        line.setOutline(ray.getcolor())
-        line.draw(win)
+#### AFFICHAGE DES RAYONS #################################################
+    # for ray in rays:
+    #     plt.plot((ray.x1,ray.x2),(ray.y1,ray.y2),color=ray.getcolor())
+
+############################################################################
+
+#### AFFICHAGE DE LA PUISSANCE #############################################
+    cmap = plt.get_cmap('jet')
+    plt.imshow(lsPRX, interpolation="nearest", cmap=cmap)
+    cb = plt.colorbar()
+    cb.set_label('Puissance reçue [dBm]')
+#############################################################################
+    plt.ion()
+    plt.show()
+
 
 
 ##    for i in range(0,4):

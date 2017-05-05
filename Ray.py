@@ -22,7 +22,8 @@ class Ray:
     def get_elec_field(self,tx):
         # tx est un OBJET de type Antenna, c'est l'émetteur
         beta=w/c
-        if self.dis != None:
+        #print('self.dis=',self.dis)
+        if self.dis != None and self.dis != 0:
             E=self.coef*np.sqrt(60*tx.gain*tx.power_emission)*np.exp(-1j*beta*self.dis)/self.dis
         else:
             E=None
@@ -32,9 +33,10 @@ class Ray:
         "Calcule la puissance reçue (par l'antenne réceptrice donc) pour UNE onde incidente"
         E=self.get_elec_field(tx)
         if E != None:
-            PRX=tx.r_tot*(np.absolute(tx.h_e*E))**2
+            PRX=(1/(8*tx.r_tot))*(np.absolute(tx.h_e*E))**2
         else:
             PRX=0
+        #print('PRX[dBm]=',10*np.log(PRX/0.001))
         return PRX
 
 

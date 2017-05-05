@@ -7,67 +7,90 @@ from Antenna import *
 from ref_tr_diff import *
 
 #taille de la carte et initialisation des murs
-xmax=500
-ymax=500
-
+xmax=50
+ymax=50
 model=Model(xmax,ymax)
-cat=1
+cat=2
 model.setwalls(xmax,ymax, cat)
-#model.setmatrice()
-
-#création émetteur et récepteur
-gain=1
-txx=100
-txy=300
-rxx=350 #rxx et rxy sont les coordonnées en haut à gauche de la zone de réception
-rxy=100
-
-raystot=[]
-tx=Antenna(gain,txx,txy)
-tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
-PRX=0 #puissance totale
-##ls_PRX_pt_ij=[]
-##for i in range(0,4):
-##    for j in range(0,4):
-##        rx=Antenna(gain,rxx+i,rxy+j)
-##        rays=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
-##        PRX_pt_ij=0 #puissance recue juste au point considéré
-##        for ray in rays:
-##            raystot.append(ray)
-##            if ray.dis != None:
-##                PRX_pt_ij==PRX_pt_ij+ray.get_PRX_individuelle(tx)
-##        PRX=PRX+PRX_pt_ij
-##        ls_PRX_pt_ij.append(PRX_pt_ij)
-##        
-##PRX=PRX/nbre_pts
-##
-##                
-##nbre_pts=(i+1)*(j+1)
-##print('nbre de pts=')
-##print(nbre_pts)
-
-rx=Antenna(gain,rxx,rxy)
-raystot=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
-
-#calcul de la puissance
-##PRX=0
-##for ray in raystot:
-##    if ray.dis != None:
-##        PRX=PRX+ray.get_PRX_individuelle(tx)
-
-
 
 #ATTENTION ici tx et rx désignent l'émetteur et le récepteur, mais
 #dans la fct reflexion ils désignent le tuple contenant la position
 
-#réflexion
+"""Calcul sur toute une zone"""
+#ATTENTION NE PAS METTRE RECEPTEUR DANS LES MURS
 
-GUI(model.getwalls(),xmax,ymax,raystot,(rxx,rxy))
-print(PRX)
+gain=1.6981
+txx=23
+txy=40
+raystot=[]
+tx=Antenna(gain,txx,txy)
+tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
+PRX=0 #puissance moyenne
+#lsPRX=[[0]*xmax]*ymax
+lsPRX=np.zeros((ymax,xmax)) #np.zeros((lignes,colonnes))
+#lsPRX est la liste des puissances EN DBM
+#MAIS ATTENTION il faut calculer le log après avoir sommé toutes les contributions,
+#et pas sommer des logarithmes!!!
+
+for i in range(0,ymax): #i: dimension y
+#for i in np.arange(0.1,ymax,0.1):
+    print('i=',i)
+    for j in range(0,xmax): #j: dimension x
+    #for j in np.arange(0.1,xmax,0.1):
+        #print('j=',j)
+        rx=Antenna(gain,i,j) #on crée une antenne réceptrice en chaque point
+        rays=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+        ray_direct=onde_directe((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+        #print('ray_direct.dis=',ray_direct.dis)
+        lsPRX[i][j]=ray_direct.get_PRX_individuelle(tx) #puissance recue juste au point considéré
+        #print('lsPRX[i][j]=',lsPRX[i][j])
+        raystot.append(ray_direct)
+        for ray in rays:
+            raystot.append(ray)
+            if ray.dis != None:
+                lsPRX[i][j]=lsPRX[i][j]+ray.get_PRX_individuelle(tx)
+        PRX=PRX+lsPRX[i][j]
+        lsPRX[i][j]=10*np.log(lsPRX[i][j]/0.001) #on passe en dBm seulement à la fin
+
+#print(lsPRX)
+                 
+nbre_pts=xmax*ymax
+PRX=PRX/nbre_pts
+PRX_dBm=10*np.log(PRX/0.001)
+
+GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)
+
+"""Calcul juste en un point
+gain=1
+txx=100
+txy=300
+rxx=150
+rxy=400
+tx=Antenna(gain,txx,txy)
+tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
+rx=Antenna(gain,rxx,rxy)
+raystot=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+print('temp1')
+ray_direct=onde_directe((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+print('temp1')
+raystot.append(ray_direct)
+
+#calcul de la puissance
+PRX=0
+##for ray in raystot:
+##    if ray.dis != None:
+##        PRX=PRX+ray.get_PRX_individuelle(tx)
+
+##PRX_dBm=10*np.log(PRX/0.001)
+##print('Puissance moyenne=',PRX)
+##print('Puissance moyenne[dBm]=',PRX_dBm)
+
+lsPRX=[PRX]
+GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)"""
 
 
 """
-#test rayonnement
+#test rayonnement ANCIEN
 xtx=10
 ytx=15
 

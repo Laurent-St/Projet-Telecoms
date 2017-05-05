@@ -81,6 +81,7 @@ class Wall:
         H = 1-C*D*E
         Gamma_m = Gamma_per + G/H
 
+        #print('coef reflex=',np.absolute(Gamma_m))
 
         return(np.absolute(Gamma_m))
 
@@ -90,7 +91,6 @@ class Wall:
      #Permet d'obtenir le module du coeff. de transmission sur un mur d'épaisseur d en fonction de l'angle d'incidence, qui doit être en RADIANS
 
     def get_coeff_trans (self, theta_i):
-
         T_m = 1 - self.get_coeff_reflex(theta_i)
-
+        #print('coef trans=',T_m)
         return(T_m)

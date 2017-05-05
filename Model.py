@@ -15,10 +15,10 @@ class Model:
         if cat==1:
             self.walls=[0]*16
             #1) contour de la maison (en briques)
-            self.walls[0]=Wall(0,xmax-1,0,0,1) #up
-            self.walls[1]=Wall(0,xmax-1,ymax-1,ymax-1,1) #down
-            self.walls[2]=Wall(0,0,0,ymax-1,1) #left
-            self.walls[3]=Wall(xmax-1,xmax-1,0,ymax-1,1) #right
+            self.walls[0]=Wall(0,xmax,0,0,1) #up
+            self.walls[1]=Wall(0,xmax,ymax,ymax,1) #down
+            self.walls[2]=Wall(0,0,0,ymax,1) #left
+            self.walls[3]=Wall(xmax,xmax,0,ymax,1) #right
 
             #2) les murs en bétons
             self.walls[4]=Wall(174,174,0,124*0.5,2)
@@ -40,10 +40,10 @@ class Model:
         else:
             #ici on va créer un étage simple, avec uniquement 4 murs en brique
             self.walls= [0]*4
-            self.walls[0]=Wall(0,xmax-1,0,0,1) #up
-            self.walls[1]=Wall(0,xmax-1,ymax-1,ymax-1,1) #down
-            self.walls[2]=Wall(0,0,0,ymax-1,1) #left
-            self.walls[3]=Wall(xmax-1,xmax-1,0,ymax-1,1) #right
+            self.walls[0]=Wall(0,xmax,0,0,1) #up
+            self.walls[1]=Wall(0,xmax,ymax,ymax,1) #down
+            self.walls[2]=Wall(0,0,0,ymax,1) #left
+            self.walls[3]=Wall(xmax,xmax,0,ymax,1) #right
 
 
 
