@@ -40,7 +40,7 @@ for i in range(0,ymax): #i: dimension y
     #for j in np.arange(0.1,xmax,0.1):
         #print('j=',j)
         if isinwall(model.getwalls(),j,i) == False:
-            rx=Antenna(gain,i,j) #on crée une antenne réceptrice en chaque point
+            rx=Antenna(gain,j,i) #on crée une antenne réceptrice en chaque point
             rays=reflexion((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
             rays_diff=diffraction(model.getwalls(),model.getaretes(), model.getcoins(),(tx.x,tx.y),(rx.x,rx.y))
             rays.extend(rays_diff)
@@ -55,6 +55,7 @@ for i in range(0,ymax): #i: dimension y
                     lsPRX[i][j]=lsPRX[i][j]+ray.get_PRX_individuelle(tx)
             PRX=PRX+lsPRX[i][j]
             lsPRX[i][j]=10*np.log(lsPRX[i][j]/0.001) #on passe en dBm seulement à la fin
+            
 
 #print(lsPRX)
 

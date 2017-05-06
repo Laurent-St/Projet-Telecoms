@@ -11,7 +11,7 @@ class Ray:
     def __init__(self,x1,y1,x2,y2,coef,dis):
         #coef=coefficient total par lequel la valeur du champ est multiplié
         #dis=distance euclidienne parcourue par tous les rayons composants une réflexion, donc cet attribut ne sera
-        #       mis que pour le dernier rayon d'une réflexion
+        #mis que pour le dernier rayon d'une réflexion
         facteur_echelle= 41.66 # /pour faire correspondre les dimensions python aux dimensions de la pièce
         self.x1=x1
         self.y1=y1
