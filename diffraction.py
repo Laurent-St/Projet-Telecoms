@@ -54,12 +54,13 @@ def calcul_param_diff(vect_wall,vect_tx,vect_rx,arete,rays,tx,rx, walls):
     for wall in walls:
         if segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!=None and segment_intersec([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!= arete   :
                 theta_itr=m.pi/2-calcAngle_ref([(ray1.x1,ray1.y1),(ray1.x2,ray1.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)]) #angle d'incidence de TRANSMISSION
-                ray2.coef=ray1.coef*wall.get_coeff_trans(theta_itr)
+                ray1.coef=ray1.coef*wall.get_coeff_trans(theta_itr)
     #Transmissions du rayon allant de l'arete/coin à la source  
     for wall in walls:
         if segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!=None and segment_intersec([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)])!= arete   :
                 theta_itr=m.pi/2-calcAngle_ref([(ray2.x1,ray2.y1),(ray2.x2,ray2.y2)],[(wall.x1,wall.y1),(wall.x2,wall.y2)]) #angle d'incidence de TRANSMISSION
                 ray2.coef=ray2.coef*wall.get_coeff_trans(theta_itr)
+    ray2.coef = ray2.coef*ray1.coef
     
     rays.append(ray1)
     rays.append(ray2)
