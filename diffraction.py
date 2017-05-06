@@ -21,18 +21,22 @@ def get_coeff_diff(s,s_p, phi,phi_p):
 
     L = s*s_p/(s+s_p)
     delta = m.pi - (phi-phi_p)
-    if delta == 0:
-        print('delta=',delta)
-    x = 2*beta*L*(m.sin(delta/2)**2)
-
-    #La fonction special.fresnel(z) renvoie : check "https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.special.fresnel.html"
-    C = scsp.fresnel(m.sqrt(2*x/m.pi))[1]
-    S = scsp.fresnel(m.sqrt(2*x/m.pi))[0]
-    integ = m.sqrt(m.pi/2)*((1-1j)/2 - (C - 1j*S))
-    F_T = 2*1j*m.sqrt(x)*np.exp(1j*x)*integ
-    A = 2*m.sqrt(2*m.pi*beta*L)
-    B = np.exp(-1j*m.pi/4)
-    D = -(B/A) *(F_T/m.sin(delta/2))
+    if (delta == 0):
+        D = 0;
+    else : 
+        
+        x = 2*beta*L*(m.sin(delta/2)**2)
+    
+        #La fonction special.fresnel(z) renvoie : check "https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.special.fresnel.html"
+        C = scsp.fresnel(m.sqrt(2*x/m.pi))[1]
+        S = scsp.fresnel(m.sqrt(2*x/m.pi))[0]
+        integ = m.sqrt(m.pi/2)*((1-1j)/2 - (C - 1j*S))
+        F_T = 2*1j*m.sqrt(x)*np.exp(1j*x)*integ
+        A = 2*m.sqrt(2*m.pi*beta*L)
+        B = np.exp(-1j*m.pi/4)
+        D = -(B/A) *(F_T/m.sin(delta/2))
+        if(A == 0):
+            print('Division par 0')
 
 
     return np.absolute(D)
