@@ -18,12 +18,12 @@ model.setwalls(xmax,ymax, cat)
 #ATTENTION ici tx et rx désignent l'émetteur et le récepteur, mais
 #dans la fct reflexion ils désignent le tuple contenant la position
 
-"""Calcul sur toute une zone
+"""Calcul sur toute une zone"""
 #ATTENTION NE PAS METTRE RECEPTEUR DANS LES MURS
 
 gain=1.6981
-txx=23
-txy=40
+txx=450
+txy=60
 raystot=[]
 tx=Antenna(gain,txx,txy)
 tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
@@ -62,14 +62,14 @@ for i in range(0,ymax): #i: dimension y
 #PRX=PRX/nbre_pts
 #PRX_dBm=10*np.log(PRX/0.001)
 
-GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)"""
+GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)
 
-"""Calcul juste en un point"""
+"""Calcul juste en un point
 gain=1
-txx=300
-txy=300
-rxx=300
-rxy=320
+txx=450
+txy=60
+rxx=150
+rxy=100
 tx=Antenna(gain,txx,txy)
 tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
 rx=Antenna(gain,rxx,rxy)
@@ -100,7 +100,7 @@ PRX=10*np.log(PRX/0.001) #on passe en dBm seulement à la fin
 print(PRX)
 
 #print(lsPRX)
-GUI(model.getwalls(),xmax,ymax,raystot,PRX)
+GUI(model.getwalls(),xmax,ymax,raystot,PRX)"""
 
 
 """

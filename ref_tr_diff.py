@@ -618,7 +618,7 @@ def reflexion(tx,rx,walls):
     #Mur du haut
     for i in range(0,len(imup)) :
         im = imup[i]
-        tempwall = walldown[i]
+        tempwall = wallup[i]
 
         #Mur du bas partie droite
         for wall in wallright :

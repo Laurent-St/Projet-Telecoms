@@ -12,12 +12,15 @@ class Ray:
         #coef=coefficient total par lequel la valeur du champ est multiplié
         #dis=distance euclidienne parcourue par tous les rayons composants une réflexion, donc cet attribut ne sera
         #       mis que pour le dernier rayon d'une réflexion
+        facteur_echelle= 41.66 # /pour faire correspondre les dimensions python aux dimensions de la pièce
         self.x1=x1
         self.y1=y1
         self.x2=x2
         self.y2=y2
         self.coef=coef
         self.dis=dis
+        if dis != None:
+            self.dis=dis/facteur_echelle
 
     def get_elec_field(self,tx):
         # tx est un OBJET de type Antenna, c'est l'émetteur
