@@ -19,31 +19,48 @@ def line_intersection(line1, line2):
 
 def segment_intersec(line1,line2):
     intersection_pt = line_intersection(line1, line2)
-
-    #print( line1[0][0], line1[1][0], line2[0][0], line2[1][0], intersection_pt[0] )
-    #print( line1[0][1], line1[1][1], line2[0][1], line2[1][1], intersection_pt[1] )
-    if intersection_pt == "no_inter":
+    res = 1
+    
+    if(intersection_pt=="no_inter"):
+        res=0
+    else:
+        
+        #Si mur vertical
+        if(line2[0][0]==line2[1][0]):
+            if(line1[0][0] < line1[1][0]):
+                if(intersection_pt[0] < line1[0][0] or intersection_pt[0] > line1[1][0]):
+                    res=0
+            elif(line1[0][0] > line1[1][0]):
+                if(intersection_pt[0] > line1[0][0] or intersection_pt[0] < line1[1][0]):
+                    res=0
+            #Si rayon horizontal
+            elif(line1[0][1] == line1[1][1] and line1[0][0] < line1[1][0]): 
+                if(intersection_pt[0] < line1[1][0] or intersection_pt[0] > line1[0][0]):
+                    res=0
+            else:
+                if(intersection_pt[0] > line1[0][0] or intersection_pt[0] < line1[1][0]):
+                    res=0
+                
+        #Si mur horizontal
+        elif(line2[0][1]==line2[1][1]) :
+            if(line1[0][0] < line1[1][0]):
+                if(intersection_pt[0] < line1[0][0] or intersection_pt[0] > line1[1][0]):
+                    res=0
+            elif(line1[0][0] > line1[1][0]):
+                if(intersection_pt[0] > line1[0][0] or intersection_pt[0] < line1[1][0]):
+                    res=0
+            #Si rayon vertical
+            elif(line1[0][0] == line1[1][0] and line1[0][1] > line1[1][1]): 
+                if(intersection_pt[1] < line1[1][1] or intersection_pt[1] > line1[0][1]):
+                    res=0
+            else:
+                if(intersection_pt[1] > line1[1][1] or intersection_pt[1] < line1[0][1]):
+                    res=0
+    
+    if(res==1):
+        return intersection_pt
+    else:
         return None
-
-    if (line1[0][0] < line1[1][0]) :
-      if intersection_pt[0] < line1[0][0] or intersection_pt[0] > line1[1][0] :
-         #print( 'exit 1' )
-         return None
-    else :
-      if intersection_pt[0] > line1[0][0] or intersection_pt[0] < line1[1][0] :
-         #print( 'exit 2' )
-         return None
-
-    if (line2[0][0] < line2[1][0]) :
-      if intersection_pt[0] < line2[0][0] or intersection_pt[0] > line2[1][0] :
-         #print( 'exit 3' )
-         return None
-    else :
-      if intersection_pt[0] > line2[0][0] or intersection_pt[0] < line2[1][0] :
-         #print( 'exit 4' )
-         return None
-
-    return intersection_pt
 
 def calcAngle_ref(lineA,lineB):
     #ATTENTION ne peut être utilisé que pour l'angle d'incidence de la réflexion et transmission
