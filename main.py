@@ -9,10 +9,10 @@ from isinwall import *
 from diffraction import *
 
 #taille de la carte et initialisation des murs
-xmax=500
-ymax=500
+xmax=50
+ymax=50
 model=Model(xmax,ymax)
-cat=1
+cat=2
 model.setwalls(xmax,ymax, cat)
 
 #ATTENTION ici tx et rx désignent l'émetteur et le récepteur, mais
@@ -22,8 +22,8 @@ model.setwalls(xmax,ymax, cat)
 #ATTENTION NE PAS METTRE RECEPTEUR DANS LES MURS
 
 gain=1.6981
-txx=450
-txy=60
+txx=25
+txy=25
 raystot=[]
 tx=Antenna(gain,txx,txy)
 tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
@@ -33,6 +33,7 @@ lsPRX=np.zeros((ymax+1,xmax+1)) #np.zeros((lignes,colonnes))
 #lsPRX est la liste des puissances EN DBM
 #MAIS ATTENTION il faut calculer le log après avoir sommé toutes les contributions,
 #et pas sommer des logarithmes!!!
+
 for i in range(0,ymax): #i: dimension y
 #for i in np.arange(0.1,ymax,0.1):
     print('i=',i)
@@ -48,13 +49,16 @@ for i in range(0,ymax): #i: dimension y
             #print('ray_direct.dis=',ray_direct.dis)
             lsPRX[i][j]=ray_direct.get_PRX_individuelle(tx) #puissance recue juste au point considéré
             #print('lsPRX[i][j]=',lsPRX[i][j])
-            raystot.append(ray_direct)
+            #raystot.append(ray_direct)
             for ray in rays:
-                raystot.append(ray)
+                #raystot.append(ray)
                 if ray.dis != None:
                     lsPRX[i][j]=lsPRX[i][j]+ray.get_PRX_individuelle(tx)
             PRX=PRX+lsPRX[i][j]
             lsPRX[i][j]=10*np.log(lsPRX[i][j]/0.001) #on passe en dBm seulement à la fin
+
+#Cas où le récepteur est sur l'émetteur et donc distance nulle, mène à des résultats incohérents: on prend la moyenne des points autour
+lsPRX[txy][txx]=(lsPRX[txy-1][txx-1]+lsPRX[txy-1][txx]+lsPRX[txy-1][txx+1]+lsPRX[txy][txx-1]+lsPRX[txy][txx+1]+lsPRX[txy+1][txx-1]+lsPRX[txy+1][txx]+lsPRX[txy+1][txx+1])/8
             
 
 #print(lsPRX)
