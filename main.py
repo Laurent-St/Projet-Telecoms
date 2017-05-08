@@ -9,10 +9,10 @@ from isinwall import *
 from diffraction import *
 
 #taille de la carte et initialisation des murs
-xmax=50
-ymax=50
+xmax=100
+ymax=100
 model=Model(xmax,ymax)
-cat=2
+cat=5
 model.setwalls(xmax,ymax, cat)
 
 #ATTENTION ici tx et rx désignent l'émetteur et le récepteur, mais
@@ -22,8 +22,8 @@ model.setwalls(xmax,ymax, cat)
 #ATTENTION NE PAS METTRE RECEPTEUR DANS LES MURS
 
 gain=1.6981
-txx=25
-txy=25
+txx=80
+txy=80
 raystot=[]
 tx=Antenna(gain,txx,txy)
 tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
@@ -46,14 +46,27 @@ for i in range(0,ymax): #i: dimension y
             rays_diff=diffraction(model.getwalls(),model.getaretes(), model.getcoins(),(tx.x,tx.y),(rx.x,rx.y))
             rays.extend(rays_diff)
             ray_direct=onde_directe((tx.x,tx.y),(rx.x,rx.y),model.getwalls())
+            #print('distance onde directe=',ray_direct.dis)
+            #if i==1 and j==txx:
+                #print('puissance onde directe=',ray_direct.get_PRX_individuelle(tx))
+                
             #print('ray_direct.dis=',ray_direct.dis)
             lsPRX[i][j]=ray_direct.get_PRX_individuelle(tx) #puissance recue juste au point considéré
+
             #print('lsPRX[i][j]=',lsPRX[i][j])
             #raystot.append(ray_direct)
             for ray in rays:
                 #raystot.append(ray)
                 if ray.dis != None:
-                    lsPRX[i][j]=lsPRX[i][j]+ray.get_PRX_individuelle(tx)
+                    if dis_eucl((txx,txy),(j,i))/20.83 > 0.3:
+                    #if ray.dis>0.3:
+
+                        lsPRX[i][j]=lsPRX[i][j]+ray.get_PRX_individuelle(tx)
+                    else:
+                        lsPRX[i][j]=0.001 #pour négliger les points qui ne sont pas en champ lointain
+                    #if i==1 and j==txx:
+                        #print('distance=',ray.dis)
+                        #print('puissance onde réfléchie=',ray.get_PRX_individuelle(tx))
             PRX=PRX+lsPRX[i][j]
             lsPRX[i][j]=10*np.log(lsPRX[i][j]/0.001) #on passe en dBm seulement à la fin
 

@@ -82,6 +82,29 @@ class Model:
             self.walls[3]=Wall(xmax-1,xmax,ymax,ymax,2) #down2
             self.walls[4]=Wall(xmax/2,xmax/2,0,ymax,2) #down1
 
+        elif cat == 4:
+            # self.walls= [0]*5
+            # self.walls[0]=Wall(0,xmax,0,0,1) #up
+            # self.walls[1]=Wall(0,xmax,ymax,ymax,1) #down
+            # self.walls[2]=Wall(0,0,0,ymax,1) #left
+            # self.walls[3]=Wall(xmax,xmax,0,ymax,1) #right
+            # self.walls[4]=Wall(xmax/2,xmax/2,0,ymax,4) #conducteur parfait
+
+            self.walls=[0]
+            self.walls[0]=Wall(xmax/2,xmax/2,0,ymax,4) #conducteur parfait
+
+        elif cat == 5: #cage de Faraday
+            self.walls=[0]*8
+            self.walls[0]=Wall(xmax/10,3*xmax/10,ymax/10,ymax/10,4) #up
+            self.walls[1]=Wall(xmax/10,xmax/10,ymax/10,3*ymax/10,4) #left
+            self.walls[2]=Wall(xmax/10,3*xmax/10,3*ymax/10,3*ymax/10,4) #down
+            self.walls[3]=Wall(3*xmax/10,3*xmax/10,ymax/10,3*ymax/10,4) #right
+
+            self.walls[4]=Wall(0,xmax,0,0,1) #up
+            self.walls[5]=Wall(0,xmax,ymax,ymax,1) #down
+            self.walls[6]=Wall(0,0,0,ymax,1) #left
+            self.walls[7]=Wall(xmax,xmax,0,ymax,1) #right
+
 
 
 ##    def setmatrice(self):

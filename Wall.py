@@ -5,6 +5,7 @@ eps_0 = 8.85*(10**(-12)) #permittivité électrique du vide
 c = 3*(10**8) #vitesse de la lumière
 mu_0 = 4*np.pi*(10**(-7)) #perméabilité magnétique du vide
 w = 2*np.pi*2.45*(10**9) #pulsation des ondes
+sig_parfait=10**(7) #valeur élevée pour simuler l'infini pour un conducteur parfait
 
 class Wall:
     "Classe mur contenant les coordonnées (x1,y1) et (x2,y2)"
@@ -27,6 +28,10 @@ class Wall:
             self.eps_r=2.25
             self.sig=0.04
             self.d=0.05
+        elif mat ==4: #4 = conducteur parfait
+            self.eps_r=1 #valeur pour le cuivre
+            self.sig=sig_parfait #valeur élevée pour simuler l'infini
+            self.d=0.05 #meme épaisseur qu'une cloison
 
     def getmat(self):
         return self.mat
@@ -82,6 +87,8 @@ class Wall:
         Gamma_m = Gamma_per + G/H
 
         #print('coef reflex=',np.absolute(Gamma_m))
+        # if self.sig==sig_parfait:
+        #     print('coef reflex cond parfait',np.absolute(Gamma_m))
 
         return(np.absolute(Gamma_m))
 
@@ -92,5 +99,8 @@ class Wall:
 
     def get_coeff_trans (self, theta_i):
         T_m = 1 - self.get_coeff_reflex(theta_i)
+        # if self.sig==sig_parfait:
+        #     print('coef transcond parfait',T_m)
+
         #print('coef trans=',T_m)
         return(T_m)

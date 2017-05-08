@@ -25,8 +25,10 @@ def GUI(walls,xmax,ymax,rays,lsPRX):
             x='black'
         elif (wall.mat==2):
             x='red'
-        else:
+        elif (wall.mat==3):
             x='blue'
+        elif (wall.mat==4):
+            x='green'
         plt.plot((wall.x1,wall.x2),(wall.y1,wall.y2),color=x,linewidth=3.0)
 
     plt.gca().invert_yaxis()

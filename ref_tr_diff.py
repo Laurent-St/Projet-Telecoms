@@ -271,7 +271,7 @@ def reflexion(tx,rx,walls):
                     if p1 != p2:
                         #print('droitehaut')
                         ptreflex2.append(p2)
-                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
+                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(ypp_up,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
@@ -329,7 +329,7 @@ def reflexion(tx,rx,walls):
                     if p1 != p2:
                         #print('droitebas')
                         ptreflex2.append(p2)
-                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
+                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(ypp_down,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
@@ -391,7 +391,7 @@ def reflexion(tx,rx,walls):
                     if p1 != p2:
                         #print('basdroite')
                         ptreflex2.append(p2)
-                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
+                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(ypp_right,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
@@ -448,7 +448,7 @@ def reflexion(tx,rx,walls):
                     if p1 != p2:
                         #print('basgauche')
                         ptreflex2.append(p2)
-                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
+                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(ypp_left,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
@@ -516,7 +516,7 @@ def reflexion(tx,rx,walls):
                     if p1 != p2:
                         #print('gauchehaut')
                         ptreflex2.append(p2)
-                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
+                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(ypp_up,rx))
                         rayreflex2.append(r2)
 
                         ptreflex1.append(p1)
@@ -574,7 +574,7 @@ def reflexion(tx,rx,walls):
                     if p1 != p2:
                         #print('gauchebas')
                         ptreflex2.append(p2)
-                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
+                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(ypp_down,rx))
                         rayreflex2.append(r2)
 
                         #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
@@ -638,7 +638,7 @@ def reflexion(tx,rx,walls):
                     if p2 != p1:
                         #print('hautdroit')
                         ptreflex2.append(p2)
-                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
+                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(ypp_right,rx))
                         rayreflex2.append(r2)
 
                         #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
@@ -693,7 +693,7 @@ def reflexion(tx,rx,walls):
                 if p1 != None:
                     if p1 != p2:
                         ptreflex2.append(p2)
-                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(p2,rx))
+                        r2 = Ray(p2[0],p2[1],rx[0],rx[1],1,dis_eucl(ypp_left,rx))
                         rayreflex2.append(r2)
 
                         #calcul des points de de première réflexion et des rayons liants les deux points de réflexion
