@@ -9,21 +9,21 @@ from isinwall import *
 from diffraction import *
 
 #taille de la carte et initialisation des murs
-xmax=100
-ymax=100
+xmax=250
+ymax=250
 model=Model(xmax,ymax)
-cat=5
+cat=1
 model.setwalls(xmax,ymax, cat)
 
 #ATTENTION ici tx et rx désignent l'émetteur et le récepteur, mais
 #dans la fct reflexion ils désignent le tuple contenant la position
 
-"""Calcul sur toute une zone"""
+"""Calcul sur toute une zone
 #ATTENTION NE PAS METTRE RECEPTEUR DANS LES MURS
 
 gain=1.6981
-txx=80
-txy=80
+txx=180
+txy=30
 raystot=[]
 tx=Antenna(gain,txx,txy)
 tx.setpower_emission(0.1) #P_TX=0.1 Watt, voir calcul dans le rapport
@@ -80,12 +80,12 @@ lsPRX[txy][txx]=(lsPRX[txy-1][txx-1]+lsPRX[txy-1][txx]+lsPRX[txy-1][txx+1]+lsPRX
 #PRX=PRX/nbre_pts
 #PRX_dBm=10*np.log(PRX/0.001)
 
-GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)
+GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)"""
 
-"""Calcul juste en un point
+"""Calcul juste en un point"""
 gain=1
-txx=450
-txy=60
+txx=180
+txy=30
 rxx=150
 rxy=100
 tx=Antenna(gain,txx,txy)
@@ -118,34 +118,5 @@ PRX=10*np.log(PRX/0.001) #on passe en dBm seulement à la fin
 print(PRX)
 
 #print(lsPRX)
-GUI(model.getwalls(),xmax,ymax,raystot,PRX)"""
+GUI(model.getwalls(),xmax,ymax,raystot,PRX)
 
-
-"""
-#test rayonnement ANCIEN
-xtx=10
-ytx=15
-
-xrx=25
-yrx=32
-
-tx=(xtx,ytx)
-rx=(xrx,yrx)
-
-im=[0]*4
-
-#première réflexion
-im[0]=(2*xmax-xtx,ytx) #right
-im[1]=(xtx,-ytx) #up
-im[2]=(-xtx,ytx) #left
-im[3]=(xtx,2*ymax-ytx)  #bottom
-
-#trouver les pt d'intersection avec les murs
-pt_interleft=line_intersection([im[2],rx],[(0,0),(0,50)])
-
-rays=[0]*2
-rays[0]=[tx,pt_interleft]
-rays[1]=[pt_interleft,rx]
-
-GUI(model.getwalls(),xmax,ymax,rays)
-"""
