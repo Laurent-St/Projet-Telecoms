@@ -18,7 +18,7 @@ model.setwalls(xmax,ymax, cat)
 #ATTENTION ici tx et rx désignent l'émetteur et le récepteur, mais
 #dans la fct reflexion ils désignent le tuple contenant la position
 
-"""Calcul sur toute une zone
+"""Calcul sur toute une zone"""
 #ATTENTION NE PAS METTRE RECEPTEUR DANS LES MURS
 
 gain=1.6981
@@ -80,9 +80,9 @@ lsPRX[txy][txx]=(lsPRX[txy-1][txx-1]+lsPRX[txy-1][txx]+lsPRX[txy-1][txx+1]+lsPRX
 #PRX=PRX/nbre_pts
 #PRX_dBm=10*np.log(PRX/0.001)
 
-GUI(model.getwalls(),xmax,ymax,raystot,lsPRX)"""
+GUI(model.getwalls(),xmax,ymax,raystot,lsPRX,2)
 
-"""Calcul juste en un point"""
+"""Calcul juste en un point
 gain=1
 txx=180
 txy=30
@@ -118,5 +118,6 @@ PRX=10*np.log(PRX/0.001) #on passe en dBm seulement à la fin
 print(PRX)
 
 #print(lsPRX)
-GUI(model.getwalls(),xmax,ymax,raystot,PRX)
+GUI(model.getwalls(),xmax,ymax,raystot,PRX,1) #le 1 est pour juste afficher les rayons
+"""
 

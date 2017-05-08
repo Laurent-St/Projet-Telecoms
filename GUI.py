@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from Wall import Wall
 
-def GUI(walls,xmax,ymax,rays,lsPRX):
+def GUI(walls,xmax,ymax,rays,lsPRX,plot_type):
     "L'origine des coordonnées (x=0,y=0) est en haut à gauche"
     "ATTENTION quand on accède à une matrice c'est colonnes puis lignes"
     "ATTENTION le index commencent en (0,0)"
@@ -34,16 +34,19 @@ def GUI(walls,xmax,ymax,rays,lsPRX):
     plt.gca().invert_yaxis()
 
 #### AFFICHAGE DES RAYONS #################################################
-    for ray in rays:
-        plt.plot((ray.x1,ray.x2),(ray.y1,ray.y2),color=ray.getcolor())
+
+    if plot_type==1:
+        for ray in rays:
+            plt.plot((ray.x1,ray.x2),(ray.y1,ray.y2),color=ray.getcolor())
 
 ############################################################################
 
 #### AFFICHAGE DE LA PUISSANCE #############################################
-    # cmap = plt.get_cmap('jet')
-    # plt.imshow(lsPRX, interpolation="nearest", cmap=cmap)
-    # cb = plt.colorbar()
-    # cb.set_label('Puissance reçue [dBm]')
+    if plot_type==2:
+        cmap = plt.get_cmap('jet')
+        plt.imshow(lsPRX, interpolation="nearest", cmap=cmap)
+        cb = plt.colorbar()
+        cb.set_label('Puissance reçue [dBm]')
 #############################################################################
     plt.ion()
     plt.show()
