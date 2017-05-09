@@ -17,50 +17,23 @@ def line_intersection(line1, line2):
     y = det(d, ydiff) / div
     return x, y
 
+
+
+
+def isinsegment(pt_arr,pt_dep,pt_inter):
+    if(dis_eucl(pt_dep,pt_inter)+dis_eucl(pt_inter,pt_arr) == dis_eucl(pt_dep,pt_arr)):
+        return True
+    
+
+
 def segment_intersec(line1,line2):
     intersection_pt = line_intersection(line1, line2)
-    res = 1
-
-    if(intersection_pt=="no_inter"):
-        res=0
-    else:
-
-        #Si mur vertical
-        if(line2[0][0]==line2[1][0]):
-            if(line1[0][0] < line1[1][0]):
-                if(intersection_pt[0] < line1[0][0] or intersection_pt[0] > line1[1][0]):
-                    res=0
-            elif(line1[0][0] > line1[1][0]):
-                if(intersection_pt[0] > line1[0][0] or intersection_pt[0] < line1[1][0]):
-                    res=0
-            #Si rayon horizontal
-            elif(line1[0][1] == line1[1][1] and line1[0][0] < line1[1][0]):
-                if(intersection_pt[0] < line1[1][0] or intersection_pt[0] > line1[0][0]):
-                    res=0
-            else:
-                if(intersection_pt[0] > line1[0][0] or intersection_pt[0] < line1[1][0]):
-                    res=0
-
-        #Si mur horizontal
-        elif(line2[0][1]==line2[1][1]) :
-            if(line1[0][0] < line1[1][0]):
-                if(intersection_pt[0] < line1[0][0] or intersection_pt[0] > line1[1][0]):
-                    res=0
-            elif(line1[0][0] > line1[1][0]):
-                if(intersection_pt[0] > line1[0][0] or intersection_pt[0] < line1[1][0]):
-                    res=0
-            #Si rayon vertical
-            elif(line1[0][0] == line1[1][0] and line1[0][1] > line1[1][1]):
-                if(intersection_pt[1] < line1[1][1] or intersection_pt[1] > line1[0][1]):
-                    res=0
-            else:
-                if(intersection_pt[1] > line1[1][1] or intersection_pt[1] < line1[0][1]):
-                    res=0
-
-    if(res==1):
+    if(isinsegment(line1[0],line1[1],intersection_pt)==True and isinsegment(line2[0],line2[1],intersection_pt)==True):
         return intersection_pt
     else:
         return None
+    
+    
 
 def calcAngle_ref(lineA,lineB):
     #ATTENTION ne peut être utilisé que pour l'angle d'incidence de la réflexion et transmission
