@@ -23,17 +23,20 @@ def line_intersection(line1, line2):
 def isinsegment(pt_arr,pt_dep,pt_inter):
     if(dis_eucl(pt_dep,pt_inter)+dis_eucl(pt_inter,pt_arr) == dis_eucl(pt_dep,pt_arr)):
         return True
-    
+
 
 
 def segment_intersec(line1,line2):
     intersection_pt = line_intersection(line1, line2)
-    if(isinsegment(line1[0],line1[1],intersection_pt)==True and isinsegment(line2[0],line2[1],intersection_pt)==True):
-        return intersection_pt
-    else:
+    if intersection_pt=="no inter":
         return None
-    
-    
+    else:
+        if(isinsegment(line1[0],line1[1],intersection_pt)==True and isinsegment(line2[0],line2[1],intersection_pt)==True):
+            return intersection_pt
+        else:
+            return None
+
+
 
 def calcAngle_ref(lineA,lineB):
     #ATTENTION ne peut être utilisé que pour l'angle d'incidence de la réflexion et transmission
